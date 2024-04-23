@@ -1,14 +1,14 @@
 .signup > h1 {
     position: relative;
     text-align: center;
-    margin: 75px 0 50px 0;
+    margin: 50px 0 50px 0;
 }
 
 .form_wrap {
     position: relative;
     display: flex;
     width: 320px;
-    height: 550px;
+    height: 600px;
     margin: auto;
     background: rgba(10, 110, 154, 0.3);
     border-radius: 30px;

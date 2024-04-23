@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import { Header } from "./components/Header";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { theme } from "./Theme";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Footer } from "./components/Footer/Footer";
-import { SignUp } from "./components/SignUp/SignUp";
+import { SignUp } from "./components/SignUp";
+import { SignIn } from "./components/SignIn";
+import { Profile } from "./components/Profile";
 
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <>
+    <BrowserRouter>
       <Header />
-      <BrowserRouter>
         <Routes>
-          <Route index element={<SignUp />} />
+          <Route path="/">
+            <Route path={"signup"} element={<SignUp />} />
+            <Route path={"signin"} element={<SignIn />} />
+          </Route>
+          <Route path={"/profile"}>
+            <Route path={":talentId"} element={<Profile />} />
+            {/* <Route
+                    path=":talentId/edit"
+                    element={<EditPage AvatarIMG={AvatarIMG} />}
+                /> */}
+          </Route>
         </Routes>
       </BrowserRouter>
       <Footer />
-    </ThemeProvider>
+    </>
   );
 };
 

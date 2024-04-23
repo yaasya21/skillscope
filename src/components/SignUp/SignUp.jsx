@@ -1,19 +1,41 @@
 import React from "react"
+import {useNavigate} from "react-router-dom"
 import countryList from "./countries.json"
 import {useForm} from "react-hook-form"
 import {registerOptions} from "./validationRules"
 import styles from "./SignUp.module.css"
 import {NavLink} from "react-router-dom"
+import { collection, addDoc } from "firebase/firestore"
+import {db} from '../../Firebase/firebase';
 const SignUp = () => {
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         formState: {errors},
     } = useForm()
+    const onSubmit = async (data) => {
+        const role = data.role ? "sponsor" : "talent"
+        try {
+            // Add the form data to Firestore
+            const docRef = await addDoc(collection(db, "users"),{
+                name: data.name,
+                surname: data.surname,
+                email: data.email,
+                password: data.password,
+                location: data.location,
+                birthDate: data.birthDate,
+                role: role,
+            });
+            console.log('Data added to Firestore successfully!');
+            localStorage.setItem("role", role)
+            localStorage.setItem("id", docRef.id)
+            navigate(`/profile/${docRef.id}`)
+        } catch (error) {
+            console.error('Error adding data to Firestore: ', error);
+        }
+    };
 
-    const onSubmit = () => {
-        //console.log(JSON.stringify(data))
-    }
 
     return (
         <div className={styles.signup}>
@@ -83,12 +105,20 @@ const SignUp = () => {
                             <p className={styles.error}>{errors.birthDate.message}</p>
                         )}
                     </div>
+                    <div className={styles.input_wrap}>
+                            <label htmlFor="role">Sponsor:</label>
+                            <input
+                                className={styles.checkbox}
+                                type="checkbox"
+                                {...register("role", {})}
+                            />
+                        </div>
                     <button type="submit">SIGN UP</button>
                 </form>
                 <p className={styles.or}>or</p>
                 <p className={styles.signin_check}>
                     Already on SkillScope?{" "}
-                    <NavLink className={styles.signin_form_elem} to={"/talents/signin"}>
+                    <NavLink className={styles.signin_form_elem} to={"/signin"}>
                         Sign in
                     </NavLink>
                 </p>
