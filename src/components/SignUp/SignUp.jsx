@@ -26,6 +26,7 @@ const SignUp = () => {
                 location: data.location,
                 birthDate: data.birthDate,
                 role: role,
+                avatar: null
             });
             console.log('Data added to Firestore successfully!');
             localStorage.setItem("role", role)

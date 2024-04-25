@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react"
 import styles from "./Profile.module.css"
-// import {ProfileSidebar} from "./components/ProfileSidebar"
-// import {Aside} from "./components/Aside"
+import {ProfileSide} from "./components/ProfileSide"
+import {ProfileMain} from "./components/ProfileMain"
 import {useLocation} from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import {db} from '../../Firebase/firebase';
 
 const Profile = () => {
     const location = useLocation()
-    const id = localStorage.getItem("id");
+    const id = location.pathname.replace("/profile/", "")
 
     const [userData, setUserData] = useState(null);
 
@@ -40,9 +40,8 @@ const Profile = () => {
                     <div className={styles.wrapper}>
                         {userData && (
                             <>
-                            <p>hihihiihi</p>
-                                {/* <ProfileSidebar talent={data} idTalentURL={id} />
-                                <Aside talent={data} /> */}
+                                <ProfileSide userData={userData} userId={id} />
+                                <ProfileMain userData={userData} />
                             </>
                         )}
                     </div>

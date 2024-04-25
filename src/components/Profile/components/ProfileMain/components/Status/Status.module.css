@@ -1,0 +1,8 @@
+.status {
+    display: block;
+    cursor: pointer;
+    width: 50vw;
+    border: 1px solid #0a6f9a;
+    padding: 10px;
+    border-radius: 10px;
+}

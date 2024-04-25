@@ -5,7 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Footer } from "./components/Footer/Footer";
 import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
-import { Profile } from "./components/Profile";
+import { Profile } from "./components/Profile"
+import { EditProfile } from "./components/EditProfile";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           </Route>
           <Route path={"/profile"}>
             <Route path={":talentId"} element={<Profile />} />
+            <Route path={":talentId/edit"} element={<EditProfile />} />
             {/* <Route
                     path=":talentId/edit"
                     element={<EditPage AvatarIMG={AvatarIMG} />}

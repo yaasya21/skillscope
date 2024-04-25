@@ -1,6 +1,4 @@
 .footer_wrap {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     padding: 10px 0;
     display: flex;
@@ -8,6 +6,8 @@
     justify-content: space-around;
     background-color: #414141;
     color: white;
+    position: fixed;
+    bottom: 0;
 }
 
 .footer_column {

@@ -1,15 +1,21 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import {useNavigate} from "react-router-dom"
 import { Logo } from "./components/Logo";
 import styles from "./Header.module.css";
 import { NavLink } from "react-router-dom";
 //import {useLocation} from "react-router-dom"
 //import {ArrowButton} from "./components/ArrowButton"
 const Header = () => {
-  let id = localStorage.getItem("id");
+  const navigate = useNavigate()
+  const id = localStorage.getItem("id");
   const isLogged = localStorage.getItem("id");
-  // const isTalentsPage = location.pathname === "/talents"
-  // const isProofsPage = location.pathname === "/proofs"
+  
+  const handleSignOut = () => {
+    localStorage.removeItem("id");
+    localStorage.removeItem("role");
+    navigate("/signin");
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logo_wrap}>
@@ -21,9 +27,7 @@ const Header = () => {
             PROFILE
           </NavLink>
           <NavLink
-            className={styles.button_in}
-            // to={`${Endpoints.POST_TALENT_SIGNIN}`}
-          >
+            className={styles.button_in} onClick={handleSignOut}>
             SIGN OUT
           </NavLink>
           </div>

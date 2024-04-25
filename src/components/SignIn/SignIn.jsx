@@ -24,7 +24,7 @@ const SignIn= () => {
 
             if (!querySnapshot.empty) {
                 const user = querySnapshot.docs[0].data();
-                const id = user.id;
+                const id = querySnapshot.docs[0].id;
                 localStorage.setItem("id", id);
                 localStorage.setItem("role", user.role);
                 navigate(`/profile/${id}`);
