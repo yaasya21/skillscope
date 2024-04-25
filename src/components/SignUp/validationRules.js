@@ -17,6 +17,9 @@ const validateDate = (value) => {
     if (birthDate.getTime() > today.getTime()) {
         return "Birth date cannot be later than today"
     }
+    if (birthDate.getYear() < 0) {
+        return "This date is too old. Please select a more recent date"
+    }
 }
 
 const registerOptions = {
@@ -53,7 +56,7 @@ const registerOptions = {
     email: {
         required: "Email is required",
         pattern: {
-            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
             message: "Not valid email. Must be examp@gmail.com",
         },
         minLength: {
@@ -79,13 +82,50 @@ const registerOptions = {
             message: "Password must have maximum 64 characters",
         },
     },
-    location: {
-        required: "Location is required",
-    },
     birthDate: {
         required: "Birth date is required",
         validate: {
             message: validateDate,
+        },
+    },
+    status: {
+        maxLength: {
+            value: 500,
+            message: "Status must have maximum 500 characters",
+        },
+    },
+    link: {
+        maxLength: {
+            value: 200,
+            message: "Link must have maximum 200 characters",
+        },
+    },
+    proofTitle: {
+        required: "This field is required",
+        maxLength: {
+            value: 100,
+            message: "Title have maximum characters",
+        },
+        pattern: {
+            value: /^[a-zA-Z0-9\s!"#$%&№'()*+,./:;<=>?@[\]^_`{|}~\\-]*$/,
+            message: "Not a valid title",
+        },
+    },
+    proofDescription: {
+        maxLength: {
+            value: 2000,
+            message: "Description have maximum characters",
+        },
+        pattern: {
+            value: /^[a-zA-Z0-9\s!"#$%&№'()*+,./:;<=>?@[\]^_`{|}~\\-]*$/,
+            message: "Not a valid description",
+        },
+    },
+    onlyLatin: {
+        required: "This field is required",
+        pattern: {
+            value: /^[a-zA-Z0-9]+$/,
+            message: "Must be written in Latin",
         },
     },
 }

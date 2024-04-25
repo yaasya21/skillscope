@@ -4,15 +4,13 @@ import { Avatar } from '@mui/material';
 import Button from '@mui/material/Button';
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import {useNavigate} from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 
 const ProfileSide = ({ userData, userId }) => {
   const navigate = useNavigate()
   const id = localStorage.getItem("id");
 
-  const handleClick = () => {
-    navigate(`/profile/${id}/edit`)
-  };
 
   return (
     <div className={styles.sidebar}>
@@ -26,12 +24,11 @@ const ProfileSide = ({ userData, userId }) => {
 ></Avatar>
 
 <Button
-  component="label"
   variant="contained"
   size="large"
   startIcon={<EditNoteIcon />}
   sx={{ borderRadius: 3, width: 120, height: 45 }}
-  onClick={handleClick}
+  component={Link} to={`/profile/${id}/edit`}
 >
   EDIT
 </Button>

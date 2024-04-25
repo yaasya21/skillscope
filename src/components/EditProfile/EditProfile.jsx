@@ -1,39 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Box, Paper, Avatar, Grid, Divider } from "@mui/material";
-import { updateDoc, doc, getDoc } from "firebase/firestore";
-import { db } from "../../Firebase/firebase";
+import { Link } from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Box,
+  Paper,
+  Avatar,
+  Grid,
+  Divider,
+  MenuItem,
+} from "@mui/material";
+import { updateDoc, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { Padding } from "@mui/icons-material";
-
-const getUserData = async (id) => {
-  try {
-    // Reference the document using its path ('users/id')
-    const userDocRef = doc(db, "users", id);
-
-    // Retrieve the document snapshot
-    const userDocSnap = await getDoc(userDocRef);
-
-    // Check if the document exists
-    if (userDocSnap.exists()) {
-      // Extract the data from the document snapshot
-      const userData = userDocSnap.data();
-      console.log("User data:", userData);
-      return userData; // Return the user data
-    } else {
-      console.log("No such user!");
-      return null; // Return null if the document doesn't exist
-    }
-  } catch (error) {
-    console.error("Error fetching document:", error);
-    return null; // Return null in case of error
-  }
-};
+import { ProgressButton } from "./components/ProgressButton";
+import { db } from "../../Firebase/firebase";
+import countryList from "../SignUp/countries.json";
+import { registerOptions } from "../SignUp/validationRules";
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
   const id = localStorage.getItem("id");
   const [formData, setFormData] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const getUserData = async (id) => {
+    try {
+      const userDocRef = doc(db, "users", id);
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        console.log("User data:", userData);
+        return userData;
+      } else {
+        console.log("No such user!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching document:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +60,48 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate form data
+    const formErrors = {};
+    for (const field in formData) {
+      if (registerOptions[field]) {
+        const fieldRules = registerOptions[field];
+        for (const rule in fieldRules) {
+          if (rule === "required" && !formData[field]) {
+            formErrors[field] = fieldRules[rule];
+          } else if (
+            rule === "pattern" &&
+            !fieldRules[rule].value.test(formData[field])
+          ) {
+            formErrors[field] = fieldRules[rule].message;
+          } else if (
+            rule === "minLength" &&
+            formData[field].length < fieldRules[rule].value
+          ) {
+            formErrors[field] = fieldRules[rule].message;
+          } else if (
+            rule === "maxLength" &&
+            formData[field].length > fieldRules[rule].value
+          ) {
+            formErrors[field] = fieldRules[rule].message;
+          } else if (
+            rule === "validate" &&
+            typeof fieldRules[rule].message === "function"
+          ) {
+            const validationResult = fieldRules[rule].message(formData[field]);
+            if (validationResult) {
+              formErrors[field] = validationResult;
+            }
+          }
+        }
+      }
+    }
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     try {
       const userRef = doc(db, "users", id);
       await updateDoc(userRef, formData);
@@ -59,6 +109,19 @@ const EditProfile = () => {
       console.log("User information updated successfully!");
     } catch (error) {
       console.error("Error updating user information:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const userDocRef = doc(db, "users", id);
+      await deleteDoc(userDocRef);
+      localStorage.removeItem("id");
+      localStorage.removeItem("role");
+
+      navigate("/signin");
+    } catch (error) {
+      console.error("Error deleting user:", error);
     }
   };
 
@@ -74,11 +137,10 @@ const EditProfile = () => {
         <Paper
           elevation={3}
           style={{ display: "flex", width: "80%" }}
-          sx={{ px: 10, py: 5}}
+          sx={{ px: 10, py: 5 }}
         >
           <Grid container spacing={7}>
-            <Grid item xs={4}
-            sx={{ mx: "auto" }}>
+            <Grid item xs={4} sx={{ mx: "auto" }}>
               <Avatar
                 src={formData.image ? formData.image : "/broken-image.jpg"}
                 sx={{ width: 150, height: 150, mb: 3, mx: "auto" }}
@@ -86,29 +148,32 @@ const EditProfile = () => {
                   border: "4px solid rgba(215, 227, 224, 0.5)",
                 }}
               ></Avatar>
-                <TextField
-                  name="image"
-                  label="Avatar URL"
-                  value={formData.image}
-                  onChange={handleChange}
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-              {role === "talent" && (
               <TextField
-                name="status"
-                label="Status"
-                value={formData.status}
+                name="image"
+                label="Avatar URL"
+                value={formData.image}
                 onChange={handleChange}
                 fullWidth
-                multiline
-                inputProps={{ maxLength: 500 }}
+                inputProps={{ maxLength: 300 }}
+                sx={{ mb: 2 }}
               />
-            )}
-            <Divider sx={{ my: 4, color: "red" }}>DELETE PROFILE</Divider>
+              {role === "talent" && (
+                <TextField
+                  name="status"
+                  label="Status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  inputProps={{ maxLength: 300 }}
+                />
+              )}
+              <Divider sx={{ my: 4, color: "red" }}>DELETE PROFILE</Divider>
+              <ProgressButton
+                longPressBackspaceCallback={() => handleDelete()}
+              />
             </Grid>
-            <Grid item xs={5}
-             sx={{ mx: "auto" }}>
+            <Grid item xs={5} sx={{ mx: "auto" }}>
               <TextField
                 name="name"
                 label="Name"
@@ -116,6 +181,8 @@ const EditProfile = () => {
                 onChange={handleChange}
                 fullWidth
                 sx={{ mb: 2 }}
+                error={!!errors.name}
+                helperText={errors.name}
               />
               <TextField
                 name="surname"
@@ -124,6 +191,8 @@ const EditProfile = () => {
                 onChange={handleChange}
                 fullWidth
                 sx={{ mb: 2 }}
+                error={!!errors.surname}
+                helperText={errors.surname}
               />
               <TextField
                 name="email"
@@ -132,6 +201,8 @@ const EditProfile = () => {
                 onChange={handleChange}
                 fullWidth
                 sx={{ mb: 2 }}
+                error={!!errors.email}
+                helperText={errors.email}
               />
               <TextField
                 name="password"
@@ -141,6 +212,8 @@ const EditProfile = () => {
                 type="password"
                 fullWidth
                 sx={{ mb: 2 }}
+                error={!!errors.password}
+                helperText={errors.password}
               />
               <TextField
                 name="location"
@@ -148,8 +221,17 @@ const EditProfile = () => {
                 value={formData.location}
                 onChange={handleChange}
                 fullWidth
+                select
                 sx={{ mb: 2 }}
-              />
+                error={!!errors.location}
+                helperText={errors.location}
+              >
+                {countryList.map((option) => (
+                  <MenuItem key={option.cca2} value={option.name}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 name="birthDate"
                 label="Birth Date"
@@ -158,8 +240,27 @@ const EditProfile = () => {
                 onChange={handleChange}
                 fullWidth
                 sx={{ mb: 2 }}
+                error={!!errors.birthDate}
+                helperText={errors.birthDate}
               />
-              <Button type="submit" variant="contained" color="primary" size="large">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{ mr: 2 }}
+                component={Link}
+                to={`/profile/${id}`}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={handleSubmit}
+              >
                 Update
               </Button>
             </Grid>
