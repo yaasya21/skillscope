@@ -9,6 +9,8 @@ import {db} from '../../Firebase/firebase';
 const Profile = () => {
     const location = useLocation()
     const id = location.pathname.replace("/profile/", "")
+    const idUser = localStorage.getItem("id")
+    const role = localStorage.getItem("role")
 
     const [userData, setUserData] = useState(null);
 
@@ -40,8 +42,8 @@ const Profile = () => {
                     <div className={styles.wrapper}>
                         {userData && (
                             <>
-                                <ProfileSide userData={userData} userId={id} />
-                                <ProfileMain userData={userData} />
+                                <ProfileSide userData={userData} idLocal={id} idUser={idUser} />
+                                <ProfileMain userData={userData} idLocal={id} idUser={idUser} role = {role}/>
                             </>
                         )}
                     </div>

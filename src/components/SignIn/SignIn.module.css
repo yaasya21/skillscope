@@ -4,7 +4,7 @@
     padding: 30px 50px 20px 50px;
     width: 350px;
     text-align: center;
-    background: #b5d3e1;
+    background: #1b562f5b;
     border-radius: 30px;
     font-family: "Nunito";
     flex-direction: column;
@@ -32,13 +32,13 @@ input.signin_form_elem {
     padding: 10px 5px;
     width: 100%;
     height: 26px;
-    border: 2px solid #3e3e3e;
+    border: 2px solid #1b562f93;
     border-radius: 7px;
     outline: 0;
 }
 
 input.signin_form_elem:focus {
-    border: 2px solid black;
+    border: 2px solid #1b562f;
 }
 
 button.signin_form_elem {
@@ -52,7 +52,7 @@ button.signin_form_elem {
     position: relative;
     border: 1px solid #ffffff;
     background: #ffffff;
-    color: #0a6e9a;
+    color: #1b562f;
     border-radius: 400px;
     cursor: pointer;
     font-family: "Inter";
@@ -62,7 +62,7 @@ button.signin_form_elem {
 }
 
 button.signin_form_elem:hover {
-    background: #0a6e9a;
+    background: #1b562f;
     color: #ffffff;
 }
 

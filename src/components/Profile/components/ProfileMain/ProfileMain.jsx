@@ -1,56 +1,49 @@
-import React, {useState, useEffect} from "react"
-import styles from "./ProfileMain.module.css"
-// import {useLocation, useNavigate} from "react-router"
-// import {Pagination} from "../../../../Main/Pagination"
-// import {useSearchParams} from "react-router-dom"
-// import {PopUpProof} from "./components/PopUpProof"
-import {UserInfo} from "./components/UserInfo"
-// import {AddProof} from "./components/AddProof"
+import React, { useState, useEffect } from "react";
+import styles from "./ProfileMain.module.css";
+import { Divider } from "@mui/material";
+import { UserInfo } from "./components/UserInfo";
+import { AddPostButton } from "./components/AddPostButton";
+import { Post } from "../../../Post";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../../../../Firebase/firebase";
 
-const ProfileMain = ({userData}) => {
-    // const location = useLocation()
-    // const navigate = useNavigate()
-    // const [searchParams] = useSearchParams()
-    // const idTalent = +location.pathname.replace("/profile/", "")
-    // const pageURL = +searchParams.get("page")
-    // const allProofs = useGetProofsQuery(
-    //     {idTalent, page: pageURL},
-    //     {
-    //         refetchOnMountOrArgChange: true,
-    //     }
-    // )
-    // const isPageNotZero = (allProofs.data && allProofs.data.totalPages) > 1
+const ProfileMain = ({ userData, idLocal, idUser, role }) => {
+  const [posts, setPosts] = useState([]);
 
-    // useEffect(() => {
-    //     if (allProofs.isError || isNaN(pageURL) === true) {
-    //         navigate(`/profile/${idTalent}`)
-    //     }
-    // }, [allProofs.isError, idTalent, navigate, pageURL, searchParams])
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const q = query(
+        collection(db, "posts"),
+        where("creatorId", "==", idLocal)
+      );
+      const querySnapshot = await getDocs(q);
+      const fetchedPosts = [];
+      querySnapshot.forEach((doc) => {
+        fetchedPosts.push({ id: doc.id, ...doc.data() });
+      });
+      fetchedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setPosts(fetchedPosts);
+    };
 
-    return (
-        <div className={styles.wrapper}>
-            <UserInfo userData={userData} />
-            {/* <AddProof
-                idTalent={idTalent}
-                localTalentID={data.id}
-                setPoopUP={setAddProofPoopUP}
-            />
-            {allProofs.isSuccess && <Content allProofs={allProofs.data && allProofs} />}
-            <PopUpProof
-                vis={isAddProofPoopUP}
-                setVis={setAddProofPoopUP}
-                allProofsRefetch={allProofs.refetch}
-            />
-            {isPageNotZero && (
-                <Pagination
-                    totalPages={allProofs.data && allProofs.data.totalPages}
-                    currentPage={pageURL}
-                    url={`profile/${idTalent}?page`}
-                    sx={{position: "relative", bottom: 0, transform: "translateX(-50%)"}}
-                /> */}
-            {/* )} */}
-        </div>
-    )
-}
+    fetchPosts();
+  }, [idLocal]);
+  return (
+    <div className={styles.wrapper}>
+      <UserInfo userData={userData} />
+      <AddPostButton idLocal={idLocal} idUser={idUser} role={role} />
+      <Divider sx={{ my: 3 }} />
+      {posts.map((post) => (
+        <Post key={post.id} postData={post} userData={userData} />
+      ))}
+    </div>
+  );
+};
 
-export {ProfileMain}
+export { ProfileMain };

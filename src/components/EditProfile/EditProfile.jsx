@@ -61,7 +61,6 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form data
     const formErrors = {};
     for (const field in formData) {
       if (registerOptions[field]) {
@@ -142,16 +141,16 @@ const EditProfile = () => {
           <Grid container spacing={7}>
             <Grid item xs={4} sx={{ mx: "auto" }}>
               <Avatar
-                src={formData.image ? formData.image : "/broken-image.jpg"}
+                src={formData.avatar ? formData.avatar : "/broken-image.jpg"}
                 sx={{ width: 150, height: 150, mb: 3, mx: "auto" }}
                 style={{
                   border: "4px solid rgba(215, 227, 224, 0.5)",
                 }}
               ></Avatar>
               <TextField
-                name="image"
+                name="avatar"
                 label="Avatar URL"
-                value={formData.image}
+                value={formData.avatar}
                 onChange={handleChange}
                 fullWidth
                 inputProps={{ maxLength: 300 }}

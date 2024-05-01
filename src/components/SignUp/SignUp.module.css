@@ -10,7 +10,7 @@
     width: 320px;
     height: 600px;
     margin: auto;
-    background: rgba(10, 110, 154, 0.3);
+    background: #1b562f5b;
     border-radius: 30px;
     align-items: center;
     justify-content: center;
@@ -24,7 +24,7 @@ select {
     width: 190px;
     height: 26px;
     background: #ffffff;
-    border: 2px solid rgba(62, 62, 62, 0.76);
+    border: 2px solid #1b562f93;
     border-radius: 7px;
     padding: 0 10px;
 }
@@ -51,7 +51,7 @@ form .error {
     position: relative;
     border: 1px solid #ffffff;
     background: #ffffff;
-    color: #0a6e9a;
+    color: #1b562f;
     border-radius: 400px;
     cursor: pointer;
     font-family: "Inter";
@@ -61,9 +61,14 @@ form .error {
 }
 
 .form_wrap button:hover {
-    background: #0a6e9a;
+    background: #1b562f;
     color: #ffffff;
 }
+
+form input:focus {
+    border: 2px solid #1b562f;
+}
+
 .or {
     display: grid;
     margin: 15px 0;

@@ -7,9 +7,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 0px 32px;
-
+    position: sticky; top: 0;
     height: 76px;
-    background: #0A6E9A;
+    background: #1b562f;
+    z-index: 1000;
 }
 
 .logo_wrap {
@@ -39,12 +40,12 @@
     font-family: 'Inter';
     font-size: 14px;
     line-height: 20px;
-    background-color: #0A6E9A;
+    background-color: #1b562f;
     color: #FFFFFF;
     cursor: pointer;
 }
 
 .button_in:hover {
     background-color: #FFFFFF;
-    color: #0A6E9A;
+    color: #1b562f;
 }

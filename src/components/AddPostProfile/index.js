@@ -1,0 +1,1 @@
+export {AddPostProfile} from "./AddPostProfile"

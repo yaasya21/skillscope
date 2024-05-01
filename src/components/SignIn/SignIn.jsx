@@ -74,7 +74,6 @@ const SignIn= () => {
                 </button>
                 <p className={styles.signin_form_elem}>or</p>
                 <p>
-                    Want to join SkillScope?{" "}
                     <NavLink
                         className={styles.signin_form_elem}
                         to={"/signup"}>

@@ -7,6 +7,7 @@ import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
 import { Profile } from "./components/Profile"
 import { EditProfile } from "./components/EditProfile";
+import { AddPostProfile } from "./components/AddPostProfile";
 
 const App = () => {
   return (
@@ -21,14 +22,15 @@ const App = () => {
           <Route path={"/profile"}>
             <Route path={":talentId"} element={<Profile />} />
             <Route path={":talentId/edit"} element={<EditProfile />} />
+            <Route path={":talentId/post"} element={<AddPostProfile />} />
             {/* <Route
                     path=":talentId/edit"
                     element={<EditPage AvatarIMG={AvatarIMG} />}
                 /> */}
           </Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   );
 };

@@ -17,7 +17,6 @@ const SignUp = () => {
     const onSubmit = async (data) => {
         const role = data.role ? "sponsor" : "talent"
         try {
-            // Add the form data to Firestore
             const docRef = await addDoc(collection(db, "users"),{
                 name: data.name,
                 surname: data.surname,
@@ -40,7 +39,7 @@ const SignUp = () => {
 
     return (
         <div className={styles.signup}>
-            <h1>Monetize your Talent</h1>
+            <h1>Monetize your Skills</h1>
             <div className={styles.form_wrap}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.input_wrap}>
@@ -118,7 +117,6 @@ const SignUp = () => {
                 </form>
                 <p className={styles.or}>or</p>
                 <p className={styles.signin_check}>
-                    Already on SkillScope?{" "}
                     <NavLink className={styles.signin_form_elem} to={"/signin"}>
                         Sign in
                     </NavLink>

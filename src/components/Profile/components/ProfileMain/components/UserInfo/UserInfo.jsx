@@ -12,7 +12,7 @@ const UserInfo = ({ userData }) => {
           className={styles.name}
         >{`${userData.name} ${userData.surname}`}</div>
         <div className={styles.location}>
-          <span>{userData.location}</span> <Place color="secondary" />
+          <span>{userData.location}</span> <Place color="success" />
         </div>
       </div>
       {userData.status && role === "talent" && (
