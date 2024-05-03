@@ -13,7 +13,7 @@ const Header = () => {
   const handleSignOut = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("role");
-    navigate("/signin");
+    navigate("/talents");
   };
 
   return (
@@ -27,7 +27,7 @@ const Header = () => {
             PROFILE
           </NavLink>
           <NavLink
-            className={styles.button_in} onClick={handleSignOut}>
+            className={styles.button_in} onClick={handleSignOut} to="/talents">
             SIGN OUT
           </NavLink>
           </div>

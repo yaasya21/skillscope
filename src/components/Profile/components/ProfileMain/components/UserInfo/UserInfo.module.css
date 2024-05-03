@@ -23,6 +23,8 @@
 }
 
 .status {
-    margin-top: 8px;
+    margin: 20px 0px 40px;
     word-wrap: break-word;
+    font-size: 18px;
+    font-weight: 600;
 }

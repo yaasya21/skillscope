@@ -14,7 +14,7 @@
     left: 0;
     width: 100%;
     height: 150px;
-    background: url("/src/source/img/bannerProfile.png") no-repeat center #1b562f;
+    background: url("/public/bannerProfile.png") no-repeat center #1b562f;
     filter: brightness(30%);
     background-size: cover;
 }

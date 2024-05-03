@@ -12,7 +12,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../../../../Firebase/firebase";
+import { db } from "../../../../db/firebase";
 
 const ProfileMain = ({ userData, idLocal, idUser, role }) => {
   const [posts, setPosts] = useState([]);
@@ -38,7 +38,7 @@ const ProfileMain = ({ userData, idLocal, idUser, role }) => {
     <div className={styles.wrapper}>
       <UserInfo userData={userData} />
       <AddPostButton idLocal={idLocal} idUser={idUser} role={role} />
-      <Divider sx={{ my: 3 }} />
+      {Object.keys(posts).length !== 0 && <Divider sx={{ my: 3 }} />}
       {posts.map((post) => (
         <Post key={post.id} postData={post} userData={userData} />
       ))}

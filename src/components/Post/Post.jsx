@@ -3,11 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button, Avatar } from "@mui/material";
 import styles from "./Post.module.css";
 import { useForm } from "react-hook-form";
-import { collection, addDoc } from "firebase/firestore"
-import {db} from '../../Firebase/firebase';
+import { registerOptions } from "../../shared/validationRules";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../db/firebase";
 
 const Post = ({ id, isAddPost, userData, postData }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
 
@@ -42,7 +43,7 @@ const Post = ({ id, isAddPost, userData, postData }) => {
               type="text"
               name="header"
               placeholder="Header"
-              {...register("header")}
+              {...register("header", registerOptions.header)}
               style={{
                 width: "50%",
                 borderRadius: "5px",
@@ -54,11 +55,17 @@ const Post = ({ id, isAddPost, userData, postData }) => {
             <textarea
               name="description"
               placeholder="Description"
-              {...register("description")}
+              {...register("description", registerOptions.description)}
               rows={4}
               cols={98}
               style={{ resize: "none", textAlign: "center", padding: "4px" }}
             />
+            {errors.header && (
+              <p className={styles.error}>{errors.header.message}</p>
+            )}
+            {errors.description && (
+              <p className={styles.error}>{errors.description.message}</p>
+            )}
           </div>
           <div className={styles.author_container}>
             <div className={styles.namedate_container}>
@@ -70,7 +77,9 @@ const Post = ({ id, isAddPost, userData, postData }) => {
                 }}
               ></Avatar>
               <div>
-                <div className={styles.author_name}>{`${userData.name} ${userData.surname}`}</div>
+                <div
+                  className={styles.author_name}
+                >{`${userData.name} ${userData.surname}`}</div>
               </div>
             </div>
             <div>
@@ -85,7 +94,12 @@ const Post = ({ id, isAddPost, userData, postData }) => {
               >
                 CANCEL
               </Button>
-              <Button variant="contained" size="medium" type="submit" color="success">
+              <Button
+                variant="contained"
+                size="medium"
+                type="submit"
+                color="success"
+              >
                 SAVE
               </Button>
             </div>
@@ -108,7 +122,9 @@ const Post = ({ id, isAddPost, userData, postData }) => {
               }}
             ></Avatar>
             <div>
-              <div className={styles.author_name}>{`${userData.name} ${userData.surname}`}</div>
+              <div
+                className={styles.author_name}
+              >{`${userData.name} ${userData.surname}`}</div>
               <div className={styles.post_date}>{postData.date}</div>
             </div>
           </div>

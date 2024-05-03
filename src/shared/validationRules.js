@@ -100,21 +100,22 @@ const registerOptions = {
             message: "Link must have maximum 200 characters",
         },
     },
-    proofTitle: {
-        required: "This field is required",
+    header: {
+        required: "Header field is required",
         maxLength: {
             value: 100,
-            message: "Title have maximum characters",
+            message: "Header should have maximum 100 characters",
         },
         pattern: {
             value: /^[a-zA-Z0-9\s!"#$%&№'()*+,./:;<=>?@[\]^_`{|}~\\-]*$/,
-            message: "Not a valid title",
+            message: "Not a valid header",
         },
     },
-    proofDescription: {
+    description: {
+        required: "Description field is required",
         maxLength: {
             value: 2000,
-            message: "Description have maximum characters",
+            message: "Description should have maximum 2000 characters",
         },
         pattern: {
             value: /^[a-zA-Z0-9\s!"#$%&№'()*+,./:;<=>?@[\]^_`{|}~\\-]*$/,

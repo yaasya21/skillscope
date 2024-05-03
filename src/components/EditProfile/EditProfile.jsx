@@ -11,14 +11,16 @@ import {
   MenuItem,
 } from "@mui/material";
 import { updateDoc, doc, getDoc, deleteDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ProgressButton } from "./components/ProgressButton";
-import { db } from "../../Firebase/firebase";
+import { db } from "../../db/firebase";
 import countryList from "../SignUp/countries.json";
-import { registerOptions } from "../SignUp/validationRules";
+import { registerOptions } from "../../shared/validationRules";
 
 const EditProfile = () => {
   const navigate = useNavigate();
+  const location = useLocation()
+  const idUser = location.pathname.split("/profile/")[1].split("/")[0];
   const role = localStorage.getItem("role");
   const id = localStorage.getItem("id");
   const [formData, setFormData] = useState(null);
@@ -53,6 +55,15 @@ const EditProfile = () => {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (!id) {
+        navigate("/signin");
+    }
+    if (id != idUser) {
+      navigate(`/profile/${id}/edit`);
+    }
+}, [id, idUser]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -118,7 +129,7 @@ const EditProfile = () => {
       localStorage.removeItem("id");
       localStorage.removeItem("role");
 
-      navigate("/signin");
+      navigate("/talents");
     } catch (error) {
       console.error("Error deleting user:", error);
     }

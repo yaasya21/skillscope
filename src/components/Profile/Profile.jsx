@@ -2,12 +2,13 @@ import React, {useState, useEffect} from "react"
 import styles from "./Profile.module.css"
 import {ProfileSide} from "./components/ProfileSide"
 import {ProfileMain} from "./components/ProfileMain"
-import {useLocation} from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore"
-import {db} from '../../Firebase/firebase';
+import {db} from '../../db/firebase';
 
 const Profile = () => {
     const location = useLocation()
+    const navigate = useNavigate()
     const id = location.pathname.replace("/profile/", "")
     const idUser = localStorage.getItem("id")
     const role = localStorage.getItem("role")
@@ -33,6 +34,12 @@ const Profile = () => {
 
         fetchUserData();
     }, [id]); 
+    
+    useEffect(() => {
+        if (!idUser) {
+            navigate("/signin");
+        }
+    }, [idUser]);
 
     return (
         <>

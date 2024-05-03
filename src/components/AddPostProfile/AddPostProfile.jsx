@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import Button from "@mui/material/Button";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./AddPostProfile.module.css";
 import { Post } from "../Post";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../Firebase/firebase";
+import { db } from "../../db/firebase";
 
 const AddPostProfile = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const idUser = location.pathname.split("/profile/")[1].split("/")[0];
   const isAddPost = location.pathname.includes("/post");
   const id = localStorage.getItem("id");
 
@@ -37,6 +38,15 @@ const AddPostProfile = () => {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (!id) {
+        navigate("/signin");
+    }
+    if (id != idUser) {
+      navigate(`/profile/${id}/post`);
+    }
+}, [id, idUser]);
 
   return (
     <div className={styles.wrapper}>
