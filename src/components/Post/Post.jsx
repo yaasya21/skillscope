@@ -1,13 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button, Avatar, IconButton } from "@mui/material";
 import styles from "./Post.module.css";
 import { useForm } from "react-hook-form";
 import { registerOptions } from "../../shared/validationRules";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, onSnapshot, updateDoc, increment, getDoc } from "firebase/firestore";
 import { db } from "../../db/firebase";
 
-const Post = ({ id, isAddPost, userData, postData }) => {
+const Post = ({ id, postId, idLocal, isAddPost, userData, postData }) => {
   const navigate = useNavigate();
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
@@ -19,6 +19,45 @@ const Post = ({ id, isAddPost, userData, postData }) => {
     formState: { errors },
   } = useForm();
 
+  const [coins, setCoins] = useState(postData?.coins || 0);
+
+  useEffect(() => {
+    if (!isAddPost) {
+      const postDocRef = doc(db, "posts", postData.id);
+      const unsubscribe = onSnapshot(postDocRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const updatedCoins = docSnapshot.data().coins;
+          setCoins(updatedCoins);
+        }
+      });
+  
+      return () => unsubscribe();
+    }
+  });
+
+  const handleAddCoin = async () => {
+    try {
+      const userDocRef = doc(db, "users", idLocal);
+      const postDocRef = doc(db, "posts", postId);
+      const sponsorDocRef = doc(db, "users", id);
+  
+      const sponsorDocSnapshot = await getDoc(sponsorDocRef);
+      const sponsorCoins = sponsorDocSnapshot.data().coins;
+  
+      if (sponsorCoins >= 1) {
+        await Promise.all([
+          updateDoc(userDocRef, { coins: increment(1) }),
+          updateDoc(postDocRef, { coins: increment(1) }),
+          updateDoc(sponsorDocRef, { coins: increment(-1) }),
+        ]);
+      } else {
+        alert("Insufficient coins!");
+      }
+    } catch (error) {
+      console.error("Error adding coin:", error);
+    }
+  };
+  
   const onSubmit = async (data) => {
     try {
       const docRef = await addDoc(collection(db, "posts"), {
@@ -31,7 +70,6 @@ const Post = ({ id, isAddPost, userData, postData }) => {
       console.log("Data added to Firestore successfully!");
       navigate(`/profile/${id}`);
     } catch (error) {
-      console.log(id);
       console.error("Error adding data to Firestore: ", error);
     }
   };
@@ -131,8 +169,8 @@ const Post = ({ id, isAddPost, userData, postData }) => {
             </div>
           </div>
           <div className={styles.counter}>
-            {postData.coins}
-          <IconButton disabled={role !== "sponsor"}>
+            {coins}
+          <IconButton disabled={role !== "sponsor"} onClick={handleAddCoin}>
       <img className={styles.coin} src={require("./img/coin.png")}/>
     </IconButton>
         </div>

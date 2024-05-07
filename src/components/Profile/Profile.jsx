@@ -49,7 +49,7 @@ const Profile = () => {
                     <div className={styles.wrapper}>
                         {userData && (
                             <>
-                                <ProfileSide userData={userData} idLocal={id} idUser={idUser} />
+                                <ProfileSide userData={userData} idLocal={id} idUser={idUser} role = {role}/>
                                 <ProfileMain userData={userData} idLocal={id} idUser={idUser} role = {role}/>
                             </>
                         )}

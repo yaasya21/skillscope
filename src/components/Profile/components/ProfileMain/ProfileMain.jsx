@@ -9,8 +9,6 @@ import {
   query,
   where,
   getDocs,
-  doc,
-  getDoc,
 } from "firebase/firestore";
 import { db } from "../../../../db/firebase";
 
@@ -40,7 +38,7 @@ const ProfileMain = ({ userData, idLocal, idUser, role }) => {
       <AddPostButton idLocal={idLocal} idUser={idUser} role={role} />
       {Object.keys(posts).length !== 0 && <Divider sx={{ my: 3 }} />}
       {posts.map((post) => (
-        <Post key={post.id} postData={post} userData={userData} />
+        <Post key={post.id} id={idUser} postId={post.id} idLocal ={idLocal} postData={post} userData={userData} />
       ))}
     </div>
   );

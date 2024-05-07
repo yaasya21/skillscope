@@ -1,101 +1,126 @@
-import React, { useState } from 'react';
-import Card from 'react-credit-cards-2';
-import './Payment.module.css'
+import React, { useState, useRef } from 'react';
+import { useNavigate} from "react-router-dom";
+import Cards from 'react-credit-cards-2'; 
+import 'react-credit-cards-2/dist/es/styles-compiled.css';
+import styles from "./Payment.module.css"
+import {
+  Box, Paper, Button
+} from "@mui/material";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { db } from '../../db/firebase.js';
+
 import {
   formatCreditCardNumber,
   formatCVC,
   formatExpirationDate
-} from './utils';
-
+} from './utils'
 
 const Payment = () => {
-  const [paymentData, setPaymentData] = useState({
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
     number: '',
     name: '',
     expiry: '',
     cvc: '',
-    issuer: '',
     focused: '',
+    coins: 0,
   });
 
-  const handleCallback = ({ issuer }, isValid) => {
-    if (isValid) {
-      setPaymentData((prevState) => ({
-        ...prevState,
-        issuer
-      }));
-    }
-  };
+  const formRef = useRef(null);
 
-  const handleInputFocus = ({ target }) => {
-    setPaymentData((prevState) => ({
-      ...prevState,
-      focused: target.name
-    }));
-  };
-
-  const handleInputChange = ({ target }) => {
-    let { name, value } = target;
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     if (name === 'number') {
-      value = formatCreditCardNumber(value);
+      e.target.value = formatCreditCardNumber(value);
     } else if (name === 'expiry') {
-      value = formatExpirationDate(value);
-    } else if (name === 'cvc') {
-      value = formatCVC(value);
+      e.target.value = formatExpirationDate(value);
+    } else if (name === 'cvc' || name === 'coins') {
+      e.target.value = formatCVC(value);
     }
-
-    setPaymentData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleInputFocus = (e) => {
+    setFormData({ ...formData, focused: e.target.name });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('You have finished payment!');
-    setPaymentData({
-      number: '',
-      name: '',
-      expiry: '',
-      cvc: '',
-      issuer: '',
-      focused: ''
-    });
+    const role = localStorage.getItem("role");
+    const userId = localStorage.getItem("id");
+    const amountOfCoins = parseInt(formData.coins || 0);
+    const userDocRef = doc(db, "users", userId);
+  
+    try {
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userCoins = userDocSnapshot.data().coins;
+        let updatedCoins = userCoins;
+        
+        if (role === "sponsor") {
+          updatedCoins += amountOfCoins;
+          alert("Coins added successfully!");
+        } else {
+          if (userCoins >= amountOfCoins && amountOfCoins != 0) {
+            updatedCoins -= amountOfCoins;
+            alert("Coins deducted successfully!");
+          } else {
+            alert("Insufficient coins!");
+            return; 
+          }
+        }
+        
+        await updateDoc(userDocRef, { coins: updatedCoins });
+        navigate(`/profile/${userId}`);
+      } else {
+        console.log("User not found in the database");
+      }
+    } catch (error) {
+      console.error("Error updating coins:", error);
+    }
   };
-
-  const { name, number, expiry, cvc, focused, issuer } = paymentData;
 
   return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="800px"
+    >
+    <Paper
+          elevation={3}
+          style={{  width: "50%"  }}
+          sx={{ px: 10, py: 5 }}
+        >
     <div key='Payment'>
-      <div className='App-payment'>
+      <div className={styles.wrapper}>
         <h1>Enter your payment details</h1>
-        <h4>please input your information below</h4>
-        <Card
-          number={number}
-          name={name}
-          expiry={expiry}
-          cvc={cvc}
-          focused={focused}
-          callback={handleCallback}
+
+        <Cards
+          number={formData.number}
+          name={formData.name}
+          expiry={formData.expiry}
+          cvc={formData.cvc}
+          focused={formData.focused}
         />
-        <form onSubmit={handleSubmit}>
-          <div className='form-group'>
-            <small>Name on card:</small>
+
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <div className={styles.input}>
+            <span>Name on card:</span>
             <input
               type='text'
               name='name'
               className='form-control'
               placeholder='Name'
-              pattern='[a-z A-Z-]+'
+              pattern='[a-z A-Z]+'
               required
-              value={name}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
             />
           </div>
-          <div className='form-group'>
-            <small>Card Number:</small>
+          <div className={styles.input}>
+            <span>Card Number:</span>
             <input
               type='tel'
               name='number'
@@ -104,13 +129,12 @@ const Payment = () => {
               pattern='[\d| ]{16,22}'
               maxLength='19'
               required
-              value={number}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
             />
           </div>
-          <div className='form-group'>
-            <small>Expiration Date:</small>
+          <div className={styles.input}>
+            <span>Expiration Date:</span>
             <input
               type='tel'
               name='expiry'
@@ -118,13 +142,12 @@ const Payment = () => {
               placeholder='Valid Thru'
               pattern='\d\d/\d\d'
               required
-              value={expiry}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
             />
           </div>
-          <div className='form-group'>
-            <small>CVC:</small>
+          <div className={styles.input}>
+            <span>CVC:</span>
             <input
               type='tel'
               name='cvc'
@@ -132,19 +155,37 @@ const Payment = () => {
               placeholder='CVC'
               pattern='\d{3}'
               required
-              value={cvc}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
             />
           </div>
-          <input type='hidden' name='issuer' value={issuer} />
-          <div className='form-actions'>
-            <button>Submit</button>
+          <div className={styles.input}>
+            <span>Amount of coins:</span>
+            <input
+              type='tel'
+              name='coins'
+              className='form-control'
+              placeholder='Amount of coins'
+              pattern='\d{3}'
+              required
+              onChange={handleInputChange}
+            />
           </div>
+          <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                size="medium"
+                onClick={handleSubmit}
+              >
+                confirm
+              </Button>
         </form>
       </div>
     </div>
+    </Paper>
+    </Box>
   );
 };
 
-export { Payment };
+export {Payment};

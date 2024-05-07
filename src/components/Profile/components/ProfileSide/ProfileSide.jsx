@@ -3,9 +3,10 @@ import styles from "./ProfileSide.module.css";
 import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Link } from "react-router-dom";
 
-const ProfileSide = ({ userData, idLocal, idUser }) => {
+const ProfileSide = ({ userData, idLocal, idUser, role }) => {
   return (
     <div className={styles.sidebar}>
       <Avatar
@@ -32,13 +33,13 @@ const ProfileSide = ({ userData, idLocal, idUser }) => {
           <Button
             variant="contained"
             size="large"
-            color="success"
-            startIcon={<EditNoteIcon />}
-            sx={{ borderRadius: 3, width: 180, height: 45, marginTop: 5}} 
+            color="primary"
+            startIcon={<AttachMoneyIcon />}
+            sx={{ borderRadius: 3, width: role === "sponsor" ? 155 : 205, height: 45, marginTop: 3}} 
             component={Link}
             to={`/profile/${idLocal}/coins`}
           >
-            ADD COINS
+            {role === "sponsor" ? "ADD COINS" : "WITHDRAW COINS"}
           </Button>
         </div>
       )}

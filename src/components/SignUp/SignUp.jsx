@@ -26,6 +26,7 @@ const SignUp = () => {
         birthDate: data.birthDate,
         role: role,
         avatar: null,
+        coins: 0,
       });
       console.log("Data added to Firestore successfully!");
       localStorage.setItem("role", role);
@@ -71,9 +72,11 @@ const SignUp = () => {
               type="email"
               {...register("email", {
                 ...registerOptions.email,
-                validate: async (value) =>
-                  (await checkEmailExists(!value)) || "Email already taken",
-              })}
+              //   validate: async (value) =>
+              //     (await checkEmailExists(!value)) || "Email already taken",
+              // 
+            })
+            }
             />
             {errors.email && (
               <p className={styles.error}>{errors.email.message}</p>

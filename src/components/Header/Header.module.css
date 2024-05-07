@@ -14,9 +14,26 @@
 }
 
 .logo_wrap {
-    position: flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-top: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.logo {
+    display: flex;
     cursor: pointer;
+}
+
+.coins {
+    font-family: "Nunito";
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 33px;
+    color: #ffffff;
 }
 
 .button_wrap {
