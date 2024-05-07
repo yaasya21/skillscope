@@ -3,10 +3,9 @@ import styles from "./ProfileSide.module.css";
 import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const ProfileSide = ({ userData, idLocal, idUser}) => {
+const ProfileSide = ({ userData, idLocal, idUser }) => {
   return (
     <div className={styles.sidebar}>
       <Avatar
@@ -18,17 +17,30 @@ const ProfileSide = ({ userData, idLocal, idUser}) => {
         }}
       ></Avatar>
       {idLocal === idUser && (
-        <Button
-          variant="contained"
-          size="large"
-          color="success"
-          startIcon={<EditNoteIcon />}
-          sx={{ borderRadius: 3, width: 120, height: 45 }}
-          component={Link}
-          to={`/profile/${idLocal}/edit`}
-        >
-          EDIT
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            startIcon={<EditNoteIcon />}
+            sx={{ borderRadius: 3, width: 120, height: 45, marginRight: 2, marginTop: 5 }} 
+            component={Link}
+            to={`/profile/${idLocal}/edit`}
+          >
+            EDIT
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            startIcon={<EditNoteIcon />}
+            sx={{ borderRadius: 3, width: 180, height: 45, marginTop: 5}} 
+            component={Link}
+            to={`/profile/${idLocal}/coins`}
+          >
+            ADD COINS
+          </Button>
+        </div>
       )}
     </div>
   );

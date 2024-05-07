@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Button, Avatar } from "@mui/material";
+import { Button, Avatar, IconButton } from "@mui/material";
 import styles from "./Post.module.css";
 import { useForm } from "react-hook-form";
 import { registerOptions } from "../../shared/validationRules";
@@ -11,6 +11,7 @@ const Post = ({ id, isAddPost, userData, postData }) => {
   const navigate = useNavigate();
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
+  const role = localStorage.getItem("role")
 
   const {
     register,
@@ -25,6 +26,7 @@ const Post = ({ id, isAddPost, userData, postData }) => {
         header: data.header,
         description: data.description,
         date: formattedDate,
+        coins: 0,
       });
       console.log("Data added to Firestore successfully!");
       navigate(`/profile/${id}`);
@@ -128,6 +130,12 @@ const Post = ({ id, isAddPost, userData, postData }) => {
               <div className={styles.post_date}>{postData.date}</div>
             </div>
           </div>
+          <div className={styles.counter}>
+            {postData.coins}
+          <IconButton disabled={role !== "sponsor"}>
+      <img className={styles.coin} src={require("./img/coin.png")}/>
+    </IconButton>
+        </div>
         </div>
       </div>
     );

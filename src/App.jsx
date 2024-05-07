@@ -8,6 +8,7 @@ import { Main } from "./components/Main";
 import { Profile } from "./components/Profile";
 import { EditProfile } from "./components/EditProfile";
 import { AddPostProfile } from "./components/AddPostProfile";
+import { Payment } from "./components/Payment";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Route path={":talentId"} element={<Profile />} />
             <Route path={":talentId/edit"} element={<EditProfile />} />
             <Route path={":talentId/post"} element={<AddPostProfile />} />
+            <Route path={":talentId/coins"} element={<Payment />} />
           </Route>
         </Routes>
         <Footer />
