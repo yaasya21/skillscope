@@ -17,6 +17,7 @@ import { registerOptions } from "../../shared/validationRules";
 import { getUserById } from "../../db/service/getUserById";
 import { updateUser } from "../../db/service/updateUser";
 import { deleteUser } from "../../db/service/deleteUser";
+import { hashPassword } from "../../shared/hashPassword";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -26,10 +27,12 @@ const EditProfile = () => {
   const id = localStorage.getItem("id");
   const [formData, setFormData] = useState(null);
   const [errors, setErrors] = useState({});
+  const [originalPassword, setOriginalPassword] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       const userData = await getUserById(id);
+      setOriginalPassword (userData.password);
       if (userData) {
         setFormData(userData);
       }
@@ -42,10 +45,10 @@ const EditProfile = () => {
     if (!id) {
       navigate("/signin");
     }
-    if (id != idUser) {
+    if (id !== idUser) {
       navigate(`/profile/${id}/edit`);
     }
-  }, [id, idUser]);
+  }, [id, idUser, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -95,6 +98,9 @@ const EditProfile = () => {
     }
 
     try {
+      if (originalPassword !== formData.password) {
+        formData.password = await hashPassword(formData.password);;
+      }
       await updateUser(id, formData);
       navigate(`/profile/${id}`);
     } catch (error) {

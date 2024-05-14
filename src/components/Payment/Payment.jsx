@@ -33,10 +33,10 @@ const Payment = () => {
     if (!userId) {
       navigate("/signin");
     }
-    if (userId != idUser) {
+    if (userId !== idUser) {
       navigate(`/profile/${userId}/coins`);
     }
-  }, [userId, idUser]);
+  }, [userId, idUser, navigate]);
 
   const formRef = useRef(null);
 
@@ -89,7 +89,7 @@ const Payment = () => {
           updatedCoins += amountOfCoins;
           alert("Coins added successfully!");
         } else {
-          if (userCoins >= amountOfCoins && amountOfCoins != 0) {
+          if (userCoins >= amountOfCoins && amountOfCoins !== 0) {
             updatedCoins -= amountOfCoins;
             alert("Coins deducted successfully!");
           } else if (amountOfCoins === 0) {

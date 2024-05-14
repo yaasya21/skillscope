@@ -143,7 +143,11 @@ const Post = ({ id, postId, idLocal, isAddPost, userData, postData }) => {
           <div className={styles.counter}>
             {coins}
             <IconButton disabled={role !== "sponsor"} onClick={handleAddCoin}>
-              <img className={styles.coin} src={require("./img/coin.png")} />
+              <img
+                className={styles.coin}
+                src={require("./img/coin.png")}
+                alt="coin"
+              />
             </IconButton>
           </div>
         </div>

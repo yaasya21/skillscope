@@ -31,7 +31,7 @@ const Profile = () => {
     if (!idUser) {
       navigate("/signin");
     }
-  }, [idUser]);
+  }, [idUser, navigate]);
 
   return (
     <>
