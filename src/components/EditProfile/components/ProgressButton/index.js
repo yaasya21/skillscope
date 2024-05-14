@@ -1,1 +1,1 @@
-export {ProgressButton} from "./ProgressButton"
+export { ProgressButton } from "./ProgressButton";

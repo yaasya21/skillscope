@@ -3,7 +3,7 @@ import styles from "./ProfileSide.module.css";
 import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Link } from "react-router-dom";
 
 const ProfileSide = ({ userData, idLocal, idUser, role }) => {
@@ -18,13 +18,26 @@ const ProfileSide = ({ userData, idLocal, idUser, role }) => {
         }}
       ></Avatar>
       {idLocal === idUser && (
-        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <Button
             variant="contained"
             size="large"
             color="success"
             startIcon={<EditNoteIcon />}
-            sx={{ borderRadius: 3, width: 120, height: 45, marginRight: 2, marginTop: 5 }} 
+            sx={{
+              borderRadius: 3,
+              width: 120,
+              height: 45,
+              marginRight: 2,
+              marginTop: 5,
+            }}
             component={Link}
             to={`/profile/${idLocal}/edit`}
           >
@@ -35,11 +48,16 @@ const ProfileSide = ({ userData, idLocal, idUser, role }) => {
             size="large"
             color="primary"
             startIcon={<AttachMoneyIcon />}
-            sx={{ borderRadius: 3, width: role === "sponsor" ? 155 : 205, height: 45, marginTop: 3}} 
+            sx={{
+              borderRadius: 3,
+              width: role === "sponsor" ? 155 : 215,
+              height: 45,
+              marginTop: 4,
+            }}
             component={Link}
             to={`/profile/${idLocal}/coins`}
           >
-            {role === "sponsor" ? "ADD COINS" : "WITHDRAW COINS"}
+            {role === "sponsor" ? "BUY COINS" : "WITHDRAW COINS"}
           </Button>
         </div>
       )}

@@ -46,7 +46,7 @@ const TalentList = ({ talentDataList }) => {
             onClick={() => paginate(currentPage - 1)}
             className={styles.paginationButton}
           >
-            <ChevronLeft sx={{ fontSize: 16 }}/> 
+            <ChevronLeft sx={{ fontSize: 16 }} />
           </button>
         )}
         <p style={{ margin: "0 10px" }}>Page {currentPage}</p>
@@ -55,7 +55,7 @@ const TalentList = ({ talentDataList }) => {
             onClick={() => paginate(currentPage + 1)}
             className={styles.paginationButton}
           >
-            <ChevronRight sx={{ fontSize: 16 }}/>
+            <ChevronRight sx={{ fontSize: 16 }} />
           </button>
         )}
       </div>

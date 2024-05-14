@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useCallback } from "react";
+import styled from "styled-components";
 
 const Button = styled.div`
   user-select: none;
@@ -33,7 +33,7 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const useLongPress = (callback = () => {}, ms = 300) =>{
+const useLongPress = (callback = () => {}, ms = 300) => {
   const [startLongPress, setStartLongPress] = useState(false);
 
   useEffect(() => {
@@ -64,25 +64,26 @@ const useLongPress = (callback = () => {}, ms = 300) =>{
       onMouseLeave: stop,
       onTouchStart: start,
       onTouchEnd: stop,
-    }
+    },
   ];
-}
+};
 
 const ProgressButton = (props) => {
-  const [startLongPress, backspaceLongPress] = useLongPress(props.longPressBackspaceCallback, 3000);
-  let className = 'progress'
+  const [startLongPress, backspaceLongPress] = useLongPress(
+    props.longPressBackspaceCallback,
+    3000
+  );
+  let className = "progress";
   if (startLongPress) {
-    className += ' start';
+    className += " start";
   }
 
   return (
-    <Button {...backspaceLongPress} >
+    <Button {...backspaceLongPress}>
       <Progress className={className}></Progress>
-      <Container>
-        HOLD TO DELETE
-      </Container>
+      <Container>HOLD TO DELETE</Container>
     </Button>
   );
 };
 
-export { ProgressButton }
+export { ProgressButton };

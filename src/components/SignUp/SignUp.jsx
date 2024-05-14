@@ -2,11 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import countryList from "./countries.json";
 import { useForm } from "react-hook-form";
+import { hashPassword } from "../../shared/hashPassword";
 import { registerOptions } from "../../shared/validationRules";
 import styles from "./SignUp.module.css";
 import { NavLink } from "react-router-dom";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { db } from "../../db/firebase";
+import { addUser } from "../../db/service/addUser";
+import { checkEmailExists } from "../../db/service/checkEmailExists";
+
 const SignUp = () => {
   const navigate = useNavigate();
   const {
@@ -14,14 +16,16 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const onSubmit = async (data) => {
     const role = data.role ? "sponsor" : "talent";
     try {
-      const docRef = await addDoc(collection(db, "users"), {
+      const hashedPassword = await hashPassword(data.password);
+      const userId = await addUser({
         name: data.name,
         surname: data.surname,
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         location: data.location,
         birthDate: data.birthDate,
         role: role,
@@ -30,20 +34,12 @@ const SignUp = () => {
       });
       console.log("Data added to Firestore successfully!");
       localStorage.setItem("role", role);
-      localStorage.setItem("id", docRef.id);
-      navigate(`/profile/${docRef.id}`);
+      localStorage.setItem("id", userId);
+      navigate(`/profile/${userId}`);
     } catch (error) {
-        
       console.error("Error adding data to Firestore: ", error);
     }
   };
-
-  const checkEmailExists = async (email) => {
-    const q = query(collection(db, "users"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  };
-
   return (
     <div className={styles.signup}>
       <h1>Monetize your Skills</h1>
@@ -72,11 +68,9 @@ const SignUp = () => {
               type="email"
               {...register("email", {
                 ...registerOptions.email,
-              //   validate: async (value) =>
-              //     (await checkEmailExists(!value)) || "Email already taken",
-              // 
-            })
-            }
+                validate: async (value) =>
+                  !(await checkEmailExists(value)) || "Email already taken",
+              })}
             />
             {errors.email && (
               <p className={styles.error}>{errors.email.message}</p>

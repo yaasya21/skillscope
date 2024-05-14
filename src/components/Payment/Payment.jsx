@@ -4,13 +4,14 @@ import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/es/styles-compiled.css";
 import styles from "./Payment.module.css";
 import { Box, Paper, Button } from "@mui/material";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { db } from "../../db/firebase.js";
+import { getUserById } from "../../db/service/getUserById";
+import { updateCoins } from "../../db/service/updateCoins";
 
 import {
   formatCreditCardNumber,
   formatCVC,
   formatExpirationDate,
+  formatName,
 } from "./utils";
 
 const Payment = () => {
@@ -48,6 +49,8 @@ const Payment = () => {
       e.target.value = formatExpirationDate(value);
     } else if (name === "cvc" || name === "coins") {
       e.target.value = formatCVC(value);
+    } else if (name === "name") {
+      e.target.value = formatName(value);
     }
   };
 
@@ -71,12 +74,11 @@ const Payment = () => {
 
     const role = localStorage.getItem("role");
     const amountOfCoins = parseInt(formData.coins || 0);
-    const userDocRef = doc(db, "users", userId);
 
     try {
-      const userDocSnapshot = await getDoc(userDocRef);
-      if (userDocSnapshot.exists()) {
-        const userCoins = userDocSnapshot.data().coins;
+      const userData = await getUserById(userId);
+      if (userData) {
+        const userCoins = userData.coins;
         let updatedCoins = userCoins;
 
         if (role === "sponsor") {
@@ -99,7 +101,7 @@ const Payment = () => {
           }
         }
 
-        await updateDoc(userDocRef, { coins: updatedCoins });
+        await updateCoins(userId, updatedCoins);
         navigate(`/profile/${userId}`);
       } else {
         console.log("User not found in the database");

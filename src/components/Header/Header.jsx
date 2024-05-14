@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "./components/Logo";
 import styles from "./Header.module.css";
 import { NavLink } from "react-router-dom";
-import {doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../db/firebase";
 
 const Header = () => {
@@ -16,16 +16,16 @@ const Header = () => {
     if (!id) {
       return;
     }
-  
+
     const userDocRef = doc(db, "users", id);
-  
+
     const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const userData = docSnapshot.data();
         setCoins(userData.coins);
       }
     });
-  
+
     return () => {
       unsubscribe();
     };

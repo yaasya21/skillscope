@@ -72,19 +72,3 @@ form .error {
 .counter {
   font-size: 18px;
 }
-
-@keyframes coinFly {
-  0% {
-    transform: translateY(0) rotate(0);
-  }
-  50% {
-    transform: translateY(-100px) rotate(180deg);
-  }
-  100% {
-    transform: translateY(0) rotate(360deg);
-  }
-}
-
-.coinAnimation {
-  animation: coinFly 1s ease-in-out;
-}

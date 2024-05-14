@@ -1,1 +1,1 @@
-export {ProfileSide} from "./ProfileSide"
+export {ProfileSide} from "./ProfileSide";

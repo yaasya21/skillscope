@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styles from "./SignIn.module.css";
 import { registerOptions } from "../../shared/validationRules.js";
 import { NavLink } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../../db/firebase.js";
+import { verifyPassword } from "../../shared/verifyPassword.js";
+import { checkEmailExists } from "../../db/service/checkEmailExists.js";
+import { getUserByEmail } from "../../db/service/getUserByEmail.js";
+import { getUserId } from "../../db/service/getUserId.js";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -13,59 +15,55 @@ const SignIn = () => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues // Add getValues from useForm
   } = useForm();
-
-  const checkEmailExists = async (email) => {
-    const q = query(collection(db, "users"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  };
-
-  const checkPasswordCorrect = async (email, password) => {
-    const q = query(
-      collection(db, "users"),
-      where("email", "==", email),
-      where("password", "==", password)
-    );
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  };
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (data) => {
     try {
       const emailExists = await checkEmailExists(data.email);
 
       if (emailExists) {
-        const passwordCorrect = await checkPasswordCorrect(
-          data.email,
-          data.password
-        );
+        const userData = await getUserByEmail(data.email);
 
-        if (passwordCorrect) {
-          const q = query(collection(db, "users"), where("email", "==", data.email));
-          const querySnapshot = await getDocs(q);
-          const id = querySnapshot.docs[0].id;
-          localStorage.setItem("id", id);
-          localStorage.setItem("role", querySnapshot.docs[0].data().role);
-          navigate(`/profile/${id}`);
+        if (userData) {
+          const { password, role } = userData;
+          const passwordCorrect = await verifyUserPassword(
+            data.password,
+            password
+          );
+
+          if (passwordCorrect) {
+            const id = await getUserId(data.email);
+            localStorage.setItem("id", id);
+            localStorage.setItem("role", role);
+            navigate(`/profile/${id}`);
+          } else {
+            setErrorMessage("Incorrect password");
+          }
         } else {
-          console.log("Incorrect password");
+          setErrorMessage("User not found");
         }
       } else {
-        console.log("User not found");
+        setErrorMessage("User not found");
       }
     } catch (error) {
       console.error("Error signing in:", error.message);
+      setErrorMessage("Error signing in");
+    }
+  };
+
+  const verifyUserPassword = async (enteredPassword, hashedPassword) => {
+    try {
+      return await verifyPassword(enteredPassword, hashedPassword);
+    } catch (error) {
+      console.error("Error verifying password:", error.message);
+      throw new Error("Error verifying password");
     }
   };
 
   return (
     <>
-      <form
-        className={styles.signin_form}
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className={styles.signin_form} onSubmit={handleSubmit(onSubmit)}>
         <h2 className={styles.signin_form_elem}>Sign in</h2>
         <div className={styles.signin_form_elem}>
           <label>Email</label>
@@ -75,8 +73,7 @@ const SignIn = () => {
             {...register("email", {
               ...registerOptions.email,
               validate: async (value) =>
-                (await checkEmailExists(value)) ||
-                "Email not found",
+                (await checkEmailExists(value)) || "Email not found",
             })}
             className={styles.signin_form_elem}
           />
@@ -89,17 +86,10 @@ const SignIn = () => {
           <br />
           <input
             type="password"
-            {...register("password", {
-              ...registerOptions.password,
-              validate: async (value) =>
-                (await checkPasswordCorrect(getValues("email"), value)) ||
-                "Incorrect password",
-            })}
+            {...register("password")}
             className={styles.signin_form_elem}
           />
-          {errors.password && (
-            <p className={styles.error}>{errors.password.message}</p>
-          )}
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
         </div>
         <button className={styles.signin_form_elem} type="submit">
           SIGN IN

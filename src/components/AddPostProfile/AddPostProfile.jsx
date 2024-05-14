@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./AddPostProfile.module.css";
 import { Post } from "../Post";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../db/firebase";
+import { getUserById} from "../../db/service/getUserById";
 
 const AddPostProfile = () => {
   const location = useLocation();
@@ -14,44 +13,29 @@ const AddPostProfile = () => {
 
   const [userData, setUserData] = useState(null);
 
-  const getUserData = async (id) => {
-    try {
-      const userDocRef = doc(db, "users", id);
-      const userDocSnap = await getDoc(userDocRef);
-  
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        console.log("User data:", userData);
-        setUserData(userData); // Update userData state
-      } else {
-        console.log("No such user!");
-      }
-    } catch (error) {
-      console.error("Error fetching document:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      await getUserData(id);
+      if (id) {
+        const userData = await getUserById(id);
+        setUserData(userData);
+      } else {
+        navigate("/signin");
+      }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
-    if (!id) {
-        navigate("/signin");
-    }
-    if (id != idUser) {
+    if (id !== idUser) {
       navigate(`/profile/${id}/post`);
     }
-}, [id, idUser]);
+  }, [id, idUser, navigate]);
 
   return (
     <div className={styles.wrapper}>
       <h1>Share your thoughts with the world</h1>
-      {userData && <Post id ={id} isAddPost={isAddPost} userData={userData} />}
+      {userData && <Post id={id} isAddPost={isAddPost} userData={userData} />}
     </div>
   );
 };

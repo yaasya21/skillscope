@@ -1,1 +1,1 @@
-export {AddPostButton} from "./AddPostButton"
+export {AddPostButton} from "./AddPostButton";

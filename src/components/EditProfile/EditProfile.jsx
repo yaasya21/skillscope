@@ -10,44 +10,26 @@ import {
   Divider,
   MenuItem,
 } from "@mui/material";
-import { updateDoc, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ProgressButton } from "./components/ProgressButton";
-import { db } from "../../db/firebase";
 import countryList from "../SignUp/countries.json";
 import { registerOptions } from "../../shared/validationRules";
+import { getUserById } from "../../db/service/getUserById";
+import { updateUser } from "../../db/service/updateUser";
+import { deleteUser } from "../../db/service/deleteUser";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const idUser = location.pathname.split("/profile/")[1].split("/")[0];
   const role = localStorage.getItem("role");
   const id = localStorage.getItem("id");
   const [formData, setFormData] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const getUserData = async (id) => {
-    try {
-      const userDocRef = doc(db, "users", id);
-      const userDocSnap = await getDoc(userDocRef);
-  
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        console.log("User data:", userData);
-        return userData;
-      } else {
-        console.log("No such user!");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching document:", error);
-      return null;
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await getUserData(id);
+      const userData = await getUserById(id);
       if (userData) {
         setFormData(userData);
       }
@@ -58,12 +40,12 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (!id) {
-        navigate("/signin");
+      navigate("/signin");
     }
     if (id != idUser) {
       navigate(`/profile/${id}/edit`);
     }
-}, [id, idUser]);
+  }, [id, idUser]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -113,22 +95,18 @@ const EditProfile = () => {
     }
 
     try {
-      const userRef = doc(db, "users", id);
-      await updateDoc(userRef, formData);
+      await updateUser(id, formData);
       navigate(`/profile/${id}`);
-      console.log("User information updated successfully!");
     } catch (error) {
-      console.error("Error updating user information:", error);
+      console.error("Error updating user:", error);
     }
   };
 
   const handleDelete = async () => {
     try {
-      const userDocRef = doc(db, "users", id);
-      await deleteDoc(userDocRef);
+      await deleteUser(id);
       localStorage.removeItem("id");
       localStorage.removeItem("role");
-
       navigate("/talents");
     } catch (error) {
       console.error("Error deleting user:", error);

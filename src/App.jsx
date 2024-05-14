@@ -9,6 +9,7 @@ import { Profile } from "./components/Profile";
 import { EditProfile } from "./components/EditProfile";
 import { AddPostProfile } from "./components/AddPostProfile";
 import { Payment } from "./components/Payment";
+import { PageDoesNotExist } from "./components/PageDoesNotExist";
 
 const App = () => {
   return (
@@ -28,6 +29,8 @@ const App = () => {
             <Route path={":talentId/post"} element={<AddPostProfile />} />
             <Route path={":talentId/coins"} element={<Payment />} />
           </Route>
+
+          <Route path="*" element={<PageDoesNotExist />} />
         </Routes>
         <Footer />
       </BrowserRouter>

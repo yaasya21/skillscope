@@ -1,1 +1,1 @@
-export {ProfileMain} from "./ProfileMain"
+export {ProfileMain} from "./ProfileMain";

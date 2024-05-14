@@ -1,1 +1,1 @@
-export {AddPostProfile} from "./AddPostProfile"
+export { AddPostProfile } from "./AddPostProfile";

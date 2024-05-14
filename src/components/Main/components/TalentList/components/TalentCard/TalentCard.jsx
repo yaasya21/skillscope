@@ -33,7 +33,7 @@ const TalentCard = ({ talentData }) => {
         <div className={styles.location}>
           <Place color="success" sx={{ fontSize: 16 }} /> {talentData.location}{" "}
         </div>
-        <div className={styles.proof}>{talentData.status}</div>
+        <div className={styles.post}>{talentData.status}</div>
       </div>
       <Button
         variant="contained"

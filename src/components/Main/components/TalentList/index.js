@@ -1,1 +1,1 @@
-export {TalentList} from "./TalentList"
+export {TalentList} from "./TalentList";
