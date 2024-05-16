@@ -32,9 +32,10 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       const userData = await getUserById(id);
-      setOriginalPassword (userData.password);
       if (userData) {
         setFormData(userData);
+        setOriginalPassword(userData.password);
+        userData.password = "";
       }
     };
 
@@ -61,6 +62,9 @@ const EditProfile = () => {
     for (const field in formData) {
       if (registerOptions[field]) {
         const fieldRules = registerOptions[field];
+        if (field === "password" && formData.password === "") {
+          continue;
+        }
         for (const rule in fieldRules) {
           if (rule === "required" && !formData[field]) {
             formErrors[field] = fieldRules[rule];
@@ -98,8 +102,10 @@ const EditProfile = () => {
     }
 
     try {
-      if (originalPassword !== formData.password) {
-        formData.password = await hashPassword(formData.password);;
+      if (formData.password !== "") {
+        formData.password = await hashPassword(formData.password);
+      } else {
+        formData.password = originalPassword;
       }
       await updateUser(id, formData);
       navigate(`/profile/${id}`);
@@ -200,7 +206,7 @@ const EditProfile = () => {
               />
               <TextField
                 name="password"
-                label="Password"
+                label="New Password"
                 value={formData.password}
                 onChange={handleChange}
                 type="password"
