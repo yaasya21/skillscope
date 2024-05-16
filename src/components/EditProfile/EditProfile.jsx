@@ -148,25 +148,27 @@ const EditProfile = () => {
                   border: "4px solid rgba(215, 227, 224, 0.5)",
                 }}
               ></Avatar>
-              <TextField
-                name="avatar"
-                label="Avatar URL"
-                value={formData.avatar}
-                onChange={handleChange}
-                fullWidth
-                inputProps={{ maxLength: 300 }}
-                sx={{ mb: 2 }}
-              />
               {role === "talent" && (
-                <TextField
-                  name="status"
-                  label="Status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  fullWidth
-                  multiline
-                  inputProps={{ maxLength: 300 }}
-                />
+                <>
+                  <TextField
+                    name="avatar"
+                    label="Avatar URL"
+                    value={formData.avatar}
+                    onChange={handleChange}
+                    fullWidth
+                    inputProps={{ maxLength: 300 }}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    name="status"
+                    label="Status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    fullWidth
+                    multiline
+                    inputProps={{ maxLength: 300 }}
+                  />
+                </>
               )}
               <Divider sx={{ my: 4, color: "red" }}>DELETE PROFILE</Divider>
               <ProgressButton
