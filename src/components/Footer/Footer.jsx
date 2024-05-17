@@ -10,6 +10,7 @@ const Footer = () => {
   if (isProfilePage) {
     return null;
   }
+  
   return (
     <footer className={styles.footer_wrap}>
       <div className={styles.footer_column}>

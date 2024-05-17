@@ -17,10 +17,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 5px;
     justify-content: center;
-    align-items: center;
-    gap: 50px;
+    margin-top: 5px;
+    gap: 50px; 
+}
+
+@media (max-width: 600px) { 
+    .logo_wrap {
+        gap: 10px; 
+    }
 }
 
 .logo {
@@ -34,6 +39,7 @@
     font-size: 20px;
     line-height: 33px;
     color: #ffffff;
+    white-space: nowrap;
 }
 
 .button_wrap {
@@ -41,6 +47,7 @@
     flex-direction: row;
     align-items: center;
     gap: 15px;
+    margin-left: 5px;
 }
 
 .button_in {

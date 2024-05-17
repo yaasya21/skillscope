@@ -72,3 +72,14 @@ form .error {
 .counter {
   font-size: 18px;
 }
+
+.addpost_container {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  height: 100%;
+  width: 100%;
+  max-width: 770px;
+}

@@ -48,8 +48,8 @@ const Post = ({ id, postId, idLocal, isAddPost, userData, postData }) => {
 
   if (isAddPost) {
     return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.post_container}>
+      <div className={styles.addpost_container}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.post_header}>
             <input
               type="text"
@@ -68,9 +68,13 @@ const Post = ({ id, postId, idLocal, isAddPost, userData, postData }) => {
               name="description"
               placeholder="Description"
               {...register("description", registerOptions.description)}
-              rows={4}
-              cols={98}
-              style={{ resize: "none", textAlign: "center", padding: "4px" }}
+              style={{
+                resize: "none",
+                textAlign: "center",
+                padding: "4px",
+                width: "100%",
+                height: "100%",
+              }}
             />
             {errors.header && (
               <p className={styles.error}>{errors.header.message}</p>
@@ -116,8 +120,8 @@ const Post = ({ id, postId, idLocal, isAddPost, userData, postData }) => {
               </Button>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     );
   } else {
     return (

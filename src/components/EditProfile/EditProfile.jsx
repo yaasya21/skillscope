@@ -136,11 +136,12 @@ const EditProfile = () => {
       {formData && (
         <Paper
           elevation={3}
-          style={{ display: "flex", width: "80%" }}
+          style={{ display: "flex" }}
           sx={{ px: 10, py: 5 }}
+          minWidth="300px"
         >
           <Grid container spacing={7}>
-            <Grid item xs={4} sx={{ mx: "auto" }}>
+            <Grid item xs={4} sx={{ mx: "auto" }} minWidth="300px">
               <Avatar
                 src={formData.avatar ? formData.avatar : "/broken-image.jpg"}
                 sx={{ width: 150, height: 150, mb: 3, mx: "auto" }}
@@ -175,7 +176,7 @@ const EditProfile = () => {
                 longPressBackspaceCallback={() => handleDelete()}
               />
             </Grid>
-            <Grid item xs={5} sx={{ mx: "auto" }}>
+            <Grid item xs={5} sx={{ mx: "auto" }} minWidth="300px">
               <TextField
                 name="name"
                 label="Name"

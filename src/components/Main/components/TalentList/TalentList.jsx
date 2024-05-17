@@ -21,6 +21,10 @@ const TalentList = ({ talentDataList }) => {
     pageNumbers.push(i);
   }
 
+  const getTalentContainerMargin = () => {
+    return currentTalents.length < 4 ? "330px" : "10px";
+  };
+
   return (
     <div className={styles.wrapper}>
       {currentTalents.map((talentData, index) => {
@@ -31,7 +35,11 @@ const TalentList = ({ talentDataList }) => {
                 {currentTalents
                   .slice(index, index + 3)
                   .map((talentData, index) => (
-                    <div key={index} className={styles.talentCardContainer}>
+                    <div
+                      key={index}
+                      className={styles.talentCardContainer}
+                      style={{ marginBottom: getTalentContainerMargin() }}
+                    >
                       <TalentCard talentData={talentData} />
                     </div>
                   ))}
